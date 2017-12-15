@@ -5,10 +5,9 @@ src
 ├── index.js
 ├── index.less
 ├── router.js
-└── views
-    ├── detail.vue
-    └── index.vue
+└── components
+├──   ├── Home.vue
+├──   └── ...
+└── assets
+      └── ...
 ```
-
-```js
-//index.js
