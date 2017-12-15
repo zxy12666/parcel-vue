@@ -11,3 +11,19 @@ src
 └── assets
       └── ...
 ```
+
+
+#### 命令
+
+
+##### 运行
+```js
+npm run dev
+```
+
+##### 编译
+```js
+npm run build
+```
+
+[作者博客](http://vueadmin.com)
