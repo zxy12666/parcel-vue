@@ -10,3 +10,4 @@ run.log
 .upload/
 .cache/
 npm-debug.log
+package-lock.json
