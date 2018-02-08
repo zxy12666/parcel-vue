@@ -22,7 +22,7 @@ src
 
 ---
 
-parcel-vue拉取以后先把package-lock.json删除，然后在执行
+`parcel-vue` 拉取以后先把 `package-lock.json` 删除，然后在执行
 
 `npm run dev`
 
