@@ -1,13 +1,19 @@
 import VueRouter from 'vue-router'
 
-import Home from './components/Home.vue'
+import ParcelVue from './components/parcel'
+import Home from './components/Home'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
+    path: '/',
+    name: 'parcel',
+    component: ParcelVue
+  },
+  {
     path: '/home',
-    name: '首页',
+    name: 'home',
     component: Home
   }
 ]
