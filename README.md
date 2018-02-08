@@ -23,6 +23,8 @@ src
 - `npm run dev`
 - 本次更新添加一个小页面，方便查看，没有什么实际意义
 
+---
+
 - Although Star is very few, but there are a lot of people, I share it under the line.
 - If you have any problems you can add to my WeChat `zhangchuang0816`
 - After pulling, remember to download the dependency first
