@@ -68,249 +68,7 @@ require = (function (modules, cache, entry) {
 
   // Override the current require with this new one
   return newRequire;
-})({18:[function(require,module,exports) {
-var Vue // late bind
-var version
-var map = (window.__VUE_HOT_MAP__ = Object.create(null))
-var installed = false
-var isBrowserify = false
-var initHookName = 'beforeCreate'
-
-exports.install = function (vue, browserify) {
-  if (installed) { return }
-  installed = true
-
-  Vue = vue.__esModule ? vue.default : vue
-  version = Vue.version.split('.').map(Number)
-  isBrowserify = browserify
-
-  // compat with < 2.0.0-alpha.7
-  if (Vue.config._lifecycleHooks.indexOf('init') > -1) {
-    initHookName = 'init'
-  }
-
-  exports.compatible = version[0] >= 2
-  if (!exports.compatible) {
-    console.warn(
-      '[HMR] You are using a version of vue-hot-reload-api that is ' +
-        'only compatible with Vue.js core ^2.0.0.'
-    )
-    return
-  }
-}
-
-/**
- * Create a record for a hot module, which keeps track of its constructor
- * and instances
- *
- * @param {String} id
- * @param {Object} options
- */
-
-exports.createRecord = function (id, options) {
-  if(map[id]) { return }
-  
-  var Ctor = null
-  if (typeof options === 'function') {
-    Ctor = options
-    options = Ctor.options
-  }
-  makeOptionsHot(id, options)
-  map[id] = {
-    Ctor: Ctor,
-    options: options,
-    instances: []
-  }
-}
-
-/**
- * Check if module is recorded
- *
- * @param {String} id
- */
-
-exports.isRecorded = function (id) {
-  return typeof map[id] !== 'undefined'
-}
-
-/**
- * Make a Component options object hot.
- *
- * @param {String} id
- * @param {Object} options
- */
-
-function makeOptionsHot(id, options) {
-  if (options.functional) {
-    var render = options.render
-    options.render = function (h, ctx) {
-      var instances = map[id].instances
-      if (ctx && instances.indexOf(ctx.parent) < 0) {
-        instances.push(ctx.parent)
-      }
-      return render(h, ctx)
-    }
-  } else {
-    injectHook(options, initHookName, function() {
-      var record = map[id]
-      if (!record.Ctor) {
-        record.Ctor = this.constructor
-      }
-      record.instances.push(this)
-    })
-    injectHook(options, 'beforeDestroy', function() {
-      var instances = map[id].instances
-      instances.splice(instances.indexOf(this), 1)
-    })
-  }
-}
-
-/**
- * Inject a hook to a hot reloadable component so that
- * we can keep track of it.
- *
- * @param {Object} options
- * @param {String} name
- * @param {Function} hook
- */
-
-function injectHook(options, name, hook) {
-  var existing = options[name]
-  options[name] = existing
-    ? Array.isArray(existing) ? existing.concat(hook) : [existing, hook]
-    : [hook]
-}
-
-function tryWrap(fn) {
-  return function (id, arg) {
-    try {
-      fn(id, arg)
-    } catch (e) {
-      console.error(e)
-      console.warn(
-        'Something went wrong during Vue component hot-reload. Full reload required.'
-      )
-    }
-  }
-}
-
-function updateOptions (oldOptions, newOptions) {
-  for (var key in oldOptions) {
-    if (!(key in newOptions)) {
-      delete oldOptions[key]
-    }
-  }
-  for (var key$1 in newOptions) {
-    oldOptions[key$1] = newOptions[key$1]
-  }
-}
-
-exports.rerender = tryWrap(function (id, options) {
-  var record = map[id]
-  if (!options) {
-    record.instances.slice().forEach(function (instance) {
-      instance.$forceUpdate()
-    })
-    return
-  }
-  if (typeof options === 'function') {
-    options = options.options
-  }
-  if (record.Ctor) {
-    record.Ctor.options.render = options.render
-    record.Ctor.options.staticRenderFns = options.staticRenderFns
-    record.instances.slice().forEach(function (instance) {
-      instance.$options.render = options.render
-      instance.$options.staticRenderFns = options.staticRenderFns
-      // reset static trees
-      // pre 2.5, all static trees are cahced together on the instance
-      if (instance._staticTrees) {
-        instance._staticTrees = []
-      }
-      // 2.5.0
-      if (Array.isArray(record.Ctor.options.cached)) {
-        record.Ctor.options.cached = []
-      }
-      // 2.5.3
-      if (Array.isArray(instance.$options.cached)) {
-        instance.$options.cached = []
-      }
-      // post 2.5.4: v-once trees are cached on instance._staticTrees.
-      // Pure static trees are cached on the staticRenderFns array
-      // (both already reset above)
-      instance.$forceUpdate()
-    })
-  } else {
-    // functional or no instance created yet
-    record.options.render = options.render
-    record.options.staticRenderFns = options.staticRenderFns
-
-    // handle functional component re-render
-    if (record.options.functional) {
-      // rerender with full options
-      if (Object.keys(options).length > 2) {
-        updateOptions(record.options, options)
-      } else {
-        // template-only rerender.
-        // need to inject the style injection code for CSS modules
-        // to work properly.
-        var injectStyles = record.options._injectStyles
-        if (injectStyles) {
-          var render = options.render
-          record.options.render = function (h, ctx) {
-            injectStyles.call(ctx)
-            return render(h, ctx)
-          }
-        }
-      }
-      record.options._Ctor = null
-      // 2.5.3
-      if (Array.isArray(record.options.cached)) {
-        record.options.cached = []
-      }
-      record.instances.slice().forEach(function (instance) {
-        instance.$forceUpdate()
-      })
-    }
-  }
-})
-
-exports.reload = tryWrap(function (id, options) {
-  var record = map[id]
-  if (options) {
-    if (typeof options === 'function') {
-      options = options.options
-    }
-    makeOptionsHot(id, options)
-    if (record.Ctor) {
-      if (version[1] < 2) {
-        // preserve pre 2.2 behavior for global mixin handling
-        record.Ctor.extendOptions = options
-      }
-      var newCtor = record.Ctor.super.extend(options)
-      record.Ctor.options = newCtor.options
-      record.Ctor.cid = newCtor.cid
-      record.Ctor.prototype = newCtor.prototype
-      if (newCtor.release) {
-        // temporary global mixin strategy used in < 2.0.0-alpha.6
-        newCtor.release()
-      }
-    } else {
-      updateOptions(record.options, options)
-    }
-  }
-  record.instances.slice().forEach(function (instance) {
-    if (instance.$vnode && instance.$vnode.context) {
-      instance.$vnode.context.$forceUpdate()
-    } else {
-      console.warn(
-        'Root or manually mounted instance modified. Full reload required.'
-      )
-    }
-  })
-})
-
-},{}],19:[function(require,module,exports) {
+})({10:[function(require,module,exports) {
 var global = (1,eval)("this");
 'use strict';
 
@@ -7508,7 +7266,249 @@ Vue$3.nextTick(function () {
 /*  */
 
 exports.default = Vue$3;
-},{}],4:[function(require,module,exports) {
+},{}],11:[function(require,module,exports) {
+var Vue // late bind
+var version
+var map = (window.__VUE_HOT_MAP__ = Object.create(null))
+var installed = false
+var isBrowserify = false
+var initHookName = 'beforeCreate'
+
+exports.install = function (vue, browserify) {
+  if (installed) { return }
+  installed = true
+
+  Vue = vue.__esModule ? vue.default : vue
+  version = Vue.version.split('.').map(Number)
+  isBrowserify = browserify
+
+  // compat with < 2.0.0-alpha.7
+  if (Vue.config._lifecycleHooks.indexOf('init') > -1) {
+    initHookName = 'init'
+  }
+
+  exports.compatible = version[0] >= 2
+  if (!exports.compatible) {
+    console.warn(
+      '[HMR] You are using a version of vue-hot-reload-api that is ' +
+        'only compatible with Vue.js core ^2.0.0.'
+    )
+    return
+  }
+}
+
+/**
+ * Create a record for a hot module, which keeps track of its constructor
+ * and instances
+ *
+ * @param {String} id
+ * @param {Object} options
+ */
+
+exports.createRecord = function (id, options) {
+  if(map[id]) { return }
+  
+  var Ctor = null
+  if (typeof options === 'function') {
+    Ctor = options
+    options = Ctor.options
+  }
+  makeOptionsHot(id, options)
+  map[id] = {
+    Ctor: Ctor,
+    options: options,
+    instances: []
+  }
+}
+
+/**
+ * Check if module is recorded
+ *
+ * @param {String} id
+ */
+
+exports.isRecorded = function (id) {
+  return typeof map[id] !== 'undefined'
+}
+
+/**
+ * Make a Component options object hot.
+ *
+ * @param {String} id
+ * @param {Object} options
+ */
+
+function makeOptionsHot(id, options) {
+  if (options.functional) {
+    var render = options.render
+    options.render = function (h, ctx) {
+      var instances = map[id].instances
+      if (ctx && instances.indexOf(ctx.parent) < 0) {
+        instances.push(ctx.parent)
+      }
+      return render(h, ctx)
+    }
+  } else {
+    injectHook(options, initHookName, function() {
+      var record = map[id]
+      if (!record.Ctor) {
+        record.Ctor = this.constructor
+      }
+      record.instances.push(this)
+    })
+    injectHook(options, 'beforeDestroy', function() {
+      var instances = map[id].instances
+      instances.splice(instances.indexOf(this), 1)
+    })
+  }
+}
+
+/**
+ * Inject a hook to a hot reloadable component so that
+ * we can keep track of it.
+ *
+ * @param {Object} options
+ * @param {String} name
+ * @param {Function} hook
+ */
+
+function injectHook(options, name, hook) {
+  var existing = options[name]
+  options[name] = existing
+    ? Array.isArray(existing) ? existing.concat(hook) : [existing, hook]
+    : [hook]
+}
+
+function tryWrap(fn) {
+  return function (id, arg) {
+    try {
+      fn(id, arg)
+    } catch (e) {
+      console.error(e)
+      console.warn(
+        'Something went wrong during Vue component hot-reload. Full reload required.'
+      )
+    }
+  }
+}
+
+function updateOptions (oldOptions, newOptions) {
+  for (var key in oldOptions) {
+    if (!(key in newOptions)) {
+      delete oldOptions[key]
+    }
+  }
+  for (var key$1 in newOptions) {
+    oldOptions[key$1] = newOptions[key$1]
+  }
+}
+
+exports.rerender = tryWrap(function (id, options) {
+  var record = map[id]
+  if (!options) {
+    record.instances.slice().forEach(function (instance) {
+      instance.$forceUpdate()
+    })
+    return
+  }
+  if (typeof options === 'function') {
+    options = options.options
+  }
+  if (record.Ctor) {
+    record.Ctor.options.render = options.render
+    record.Ctor.options.staticRenderFns = options.staticRenderFns
+    record.instances.slice().forEach(function (instance) {
+      instance.$options.render = options.render
+      instance.$options.staticRenderFns = options.staticRenderFns
+      // reset static trees
+      // pre 2.5, all static trees are cahced together on the instance
+      if (instance._staticTrees) {
+        instance._staticTrees = []
+      }
+      // 2.5.0
+      if (Array.isArray(record.Ctor.options.cached)) {
+        record.Ctor.options.cached = []
+      }
+      // 2.5.3
+      if (Array.isArray(instance.$options.cached)) {
+        instance.$options.cached = []
+      }
+      // post 2.5.4: v-once trees are cached on instance._staticTrees.
+      // Pure static trees are cached on the staticRenderFns array
+      // (both already reset above)
+      instance.$forceUpdate()
+    })
+  } else {
+    // functional or no instance created yet
+    record.options.render = options.render
+    record.options.staticRenderFns = options.staticRenderFns
+
+    // handle functional component re-render
+    if (record.options.functional) {
+      // rerender with full options
+      if (Object.keys(options).length > 2) {
+        updateOptions(record.options, options)
+      } else {
+        // template-only rerender.
+        // need to inject the style injection code for CSS modules
+        // to work properly.
+        var injectStyles = record.options._injectStyles
+        if (injectStyles) {
+          var render = options.render
+          record.options.render = function (h, ctx) {
+            injectStyles.call(ctx)
+            return render(h, ctx)
+          }
+        }
+      }
+      record.options._Ctor = null
+      // 2.5.3
+      if (Array.isArray(record.options.cached)) {
+        record.options.cached = []
+      }
+      record.instances.slice().forEach(function (instance) {
+        instance.$forceUpdate()
+      })
+    }
+  }
+})
+
+exports.reload = tryWrap(function (id, options) {
+  var record = map[id]
+  if (options) {
+    if (typeof options === 'function') {
+      options = options.options
+    }
+    makeOptionsHot(id, options)
+    if (record.Ctor) {
+      if (version[1] < 2) {
+        // preserve pre 2.2 behavior for global mixin handling
+        record.Ctor.extendOptions = options
+      }
+      var newCtor = record.Ctor.super.extend(options)
+      record.Ctor.options = newCtor.options
+      record.Ctor.cid = newCtor.cid
+      record.Ctor.prototype = newCtor.prototype
+      if (newCtor.release) {
+        // temporary global mixin strategy used in < 2.0.0-alpha.6
+        newCtor.release()
+      }
+    } else {
+      updateOptions(record.options, options)
+    }
+  }
+  record.instances.slice().forEach(function (instance) {
+    if (instance.$vnode && instance.$vnode.context) {
+      instance.$vnode.context.$forceUpdate()
+    } else {
+      console.warn(
+        'Root or manually mounted instance modified. Full reload required.'
+      )
+    }
+  })
+})
+
+},{}],3:[function(require,module,exports) {
 ;(function () {
   'use strict';
 
@@ -7541,7 +7541,7 @@ if (module.hot) {
     }
   })();
 }
-},{"vue-hot-reload-api":18,"vue":19}],17:[function(require,module,exports) {
+},{"vue-hot-reload-api":11,"vue":10}],12:[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -9994,7 +9994,7 @@ if (inBrowser && window.Vue) {
 }
 
 exports.default = VueRouter;
-},{}],11:[function(require,module,exports) {
+},{}],8:[function(require,module,exports) {
 var __vue__options__ = typeof module.exports === "function" ? module.exports.options : module.exports;
 if (__vue__options__.functional) {
   console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.");
@@ -10016,7 +10016,7 @@ if (module.hot) {
     }
   })();
 }
-},{"vue-hot-reload-api":18,"vue":19}],12:[function(require,module,exports) {
+},{"vue-hot-reload-api":11,"vue":10}],9:[function(require,module,exports) {
 var __vue__options__ = typeof module.exports === "function" ? module.exports.options : module.exports;
 if (__vue__options__.functional) {
   console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.");
@@ -10038,12 +10038,16 @@ if (module.hot) {
     }
   })();
 }
-},{"vue-hot-reload-api":18,"vue":19}],5:[function(require,module,exports) {
+},{"vue-hot-reload-api":11,"vue":10}],5:[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _vue = require('vue');
+
+var _vue2 = _interopRequireDefault(_vue);
 
 var _vueRouter = require('vue-router');
 
@@ -10059,7 +10063,7 @@ var _Home2 = _interopRequireDefault(_Home);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-Vue.use(_vueRouter2.default);
+_vue2.default.use(_vueRouter2.default);
 
 var routes = [{
   path: '/',
@@ -10082,7 +10086,7 @@ router.afterEach(function () {
 });
 
 exports.default = router;
-},{"vue-router":17,"./components/parcel":11,"./components/Home":12}],15:[function(require,module,exports) {
+},{"vue":10,"vue-router":12,"./components/parcel":8,"./components/Home":9}],7:[function(require,module,exports) {
 var bundleURL = null;
 function getBundleURLCached() {
   if (!bundleURL) {
@@ -10112,7 +10116,7 @@ function getBaseURL(url) {
 
 exports.getBundleURL = getBundleURLCached;
 exports.getBaseURL = getBaseURL;
-},{}],9:[function(require,module,exports) {
+},{}],6:[function(require,module,exports) {
 var bundle = require('./bundle-url');
 
 function updateLink(link) {
@@ -10143,16 +10147,20 @@ function reloadCSS() {
 }
 
 module.exports = reloadCSS;
-},{"./bundle-url":15}],6:[function(require,module,exports) {
+},{"./bundle-url":7}],4:[function(require,module,exports) {
 
         var reloadCSS = require('_css_loader');
         module.hot.dispose(reloadCSS);
         module.hot.accept(reloadCSS);
       
-},{"_css_loader":9}],2:[function(require,module,exports) {
+},{"_css_loader":6}],2:[function(require,module,exports) {
 'use strict';
 
-var _app = require('./app.vue');
+var _vue = require('vue');
+
+var _vue2 = _interopRequireDefault(_vue);
+
+var _app = require('./app');
 
 var _app2 = _interopRequireDefault(_app);
 
@@ -10164,14 +10172,14 @@ require('./index.less');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-new Vue({
+new _vue2.default({
   router: _router2.default,
   el: 'app',
-  components: {
-    app: _app2.default
+  render: function render(h) {
+    return h(_app2.default);
   }
 });
-},{"./app.vue":4,"./router":5,"./index.less":6}],0:[function(require,module,exports) {
+},{"vue":10,"./app":3,"./router":5,"./index.less":4}],0:[function(require,module,exports) {
 var global = (1, eval)('this');
 var OldModule = module.bundle.Module;
 function Module(config) {
@@ -10190,7 +10198,7 @@ function Module(config) {
 module.bundle.Module = Module;
 
 if (!module.bundle.parent && typeof WebSocket !== 'undefined') {
-  var ws = new WebSocket('ws://localhost:60440/');
+  var ws = new WebSocket('ws://localhost:51495/');
   ws.onmessage = function(event) {
     var data = JSON.parse(event.data);
 

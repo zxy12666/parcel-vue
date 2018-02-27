@@ -1,4 +1,5 @@
-import app from './app.vue'
+import Vue from 'vue'
+import app from './app'
 import router from './router'
 
 import './index.less'
@@ -7,8 +8,5 @@ import './index.less'
 new Vue({
   router,
   el: 'app',
-  components: {
-    app
-  }
+  render: h => h(app)
 })
-
