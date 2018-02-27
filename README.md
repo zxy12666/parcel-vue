@@ -17,7 +17,9 @@ src
 
 2018-02-27
 
-- 删除依赖重新下载后可能出现报错信息：`Cannot read property 'targets' of undefined`, 解决方案如下:
+- 删除依赖重新下载后可能出现报错信息：`Cannot read property 'targets' of undefined`
+- 解决方案如下:
+
 (1) 修改parcel-bundler源码
 - 上面是报错依赖需要修改的出现错误文件(getTargetEngines.js)中的113行代码 `if` 后面的判断条件需要修改一下
 - `if (env && env[1] && env[1].targets)`
