@@ -18,20 +18,14 @@ src
 2018-02-27
 
 - 删除依赖重新下载后出现报错信息
-
 - 解决方案如下
-
-```
-if (env && env[1] && env[1].targets) {
-      return env[1].targets;
-}
-```
-
 - 上面是报错依赖需要修改的代码 `if` 后面的判断条件需要修改一下
-
+- `if (env && env[1] && env[1].targets)`
 - index.html里面直接引用js貌似失效了
-
 - 所以还是npm install vue吧
+
+
+---
 
 
 2018-02-08
@@ -42,7 +36,9 @@ if (env && env[1] && env[1].targets) {
 - `npm run dev`
 - 本次更新添加一个小页面，方便查看，没有什么实际意义
 
+
 ---
+
 
 - Although Star is very few, but there are a lot of people, I share it under the line.
 - If you have any problems you can add to my WeChat `zhangchuang0816`
@@ -50,7 +46,9 @@ if (env && env[1] && env[1].targets) {
 - `npm run dev`
 - This update adds a small page, which is convenient to view and has no practical significance.
 
+
 ---
+
 
 ##### 运行 Run
 ```
