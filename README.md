@@ -15,6 +15,25 @@ src
 
 #### 更新记录 Update record
 
+2018-02-27
+
+删除依赖重新下载后出现报错信息
+
+解决方案如下
+
+```javascript
+if (env && env[1] && env[1].targets) {
+      return env[1].targets;
+}
+```
+
+上面是报错依赖需要修改的代码 `if` 后面的判断条件需要修改一下
+
+index.html里面直接引用js貌似失效了
+
+所以还是npm install vue吧
+
+
 2018-02-08
 
 - 虽然Star很少，但是用的人很多，我都是线下分享的
