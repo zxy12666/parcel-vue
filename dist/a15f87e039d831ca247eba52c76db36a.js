@@ -65,7 +65,7 @@ require = (function (modules, cache, entry) {
 
   // Override the current require with this new one
   return newRequire;
-})({10:[function(require,module,exports) {
+})({11:[function(require,module,exports) {
 var global = (1,eval)("this");
 /*!
  * Vue.js v2.5.11
@@ -7242,7 +7242,7 @@ Vue$3.nextTick(function () {
 /*  */
 
 module.exports = Vue$3;
-},{}],11:[function(require,module,exports) {
+},{}],12:[function(require,module,exports) {
 var Vue // late bind
 var version
 var map = (window.__VUE_HOT_MAP__ = Object.create(null))
@@ -7472,7 +7472,7 @@ exports.reload = tryWrap(function (id, options) {
   })
 })
 
-},{}],12:[function(require,module,exports) {
+},{}],14:[function(require,module,exports) {
 var inserted = exports.cache = {}
 
 function noop () {}
@@ -7497,7 +7497,7 @@ exports.insert = function (css) {
   }
 }
 
-},{}],6:[function(require,module,exports) {
+},{}],4:[function(require,module,exports) {
 ;(function(){
 'use strict';
 
@@ -7523,7 +7523,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-2c22a792", __vue__options__)
   }
 })()}
-},{"vue":10,"vue-hot-reload-api":11,"vueify/lib/insert-css":12}],16:[function(require,module,exports) {
+},{"vue":11,"vue-hot-reload-api":12,"vueify/lib/insert-css":14}],8:[function(require,module,exports) {
 var bundleURL = null;
 function getBundleURLCached() {
   if (!bundleURL) {
@@ -7554,7 +7554,7 @@ function getBaseURL(url) {
 exports.getBundleURL = getBundleURLCached;
 exports.getBaseURL = getBaseURL;
 
-},{}],15:[function(require,module,exports) {
+},{}],7:[function(require,module,exports) {
 var bundle = require('./bundle-url');
 
 function updateLink(link) {
@@ -7586,13 +7586,43 @@ function reloadCSS() {
 
 module.exports = reloadCSS;
 
-},{"./bundle-url":16}],7:[function(require,module,exports) {
+},{"./bundle-url":8}],5:[function(require,module,exports) {
 
         var reloadCSS = require('_css_loader');
         module.hot.dispose(reloadCSS);
         module.hot.accept(reloadCSS);
       
-},{"_css_loader":15}],14:[function(require,module,exports) {
+},{"_css_loader":7}],9:[function(require,module,exports) {
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":"index"}},[_vm._v("\n    This is parcel page\n")])}
+__vue__options__.staticRenderFns = []
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-24b6ce38", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-24b6ce38", __vue__options__)
+  }
+})()}
+},{"vue":11,"vue-hot-reload-api":12,"vueify/lib/insert-css":14}],10:[function(require,module,exports) {
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":"home"}},[_vm._v("\n    This is home page\n")])}
+__vue__options__.staticRenderFns = []
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6fd43424", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-6fd43424", __vue__options__)
+  }
+})()}
+},{"vue":11,"vue-hot-reload-api":12,"vueify/lib/insert-css":14}],13:[function(require,module,exports) {
 /**
   * vue-router v3.0.1
   * (c) 2017 Evan You
@@ -10042,37 +10072,7 @@ if (inBrowser && window.Vue) {
 }
 
 module.exports = VueRouter;
-},{}],18:[function(require,module,exports) {
-var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
-if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":"index"}},[_vm._v("\n    This is parcel page\n")])}
-__vue__options__.staticRenderFns = []
-if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), true)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-24b6ce38", __vue__options__)
-  } else {
-    hotAPI.reload("data-v-24b6ce38", __vue__options__)
-  }
-})()}
-},{"vue":10,"vueify/lib/insert-css":12,"vue-hot-reload-api":11}],13:[function(require,module,exports) {
-var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
-if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
-__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":"home"}},[_vm._v("\n    This is home page\n")])}
-__vue__options__.staticRenderFns = []
-if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), true)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6fd43424", __vue__options__)
-  } else {
-    hotAPI.reload("data-v-6fd43424", __vue__options__)
-  }
-})()}
-},{"vue":10,"vue-hot-reload-api":11,"vueify/lib/insert-css":12}],8:[function(require,module,exports) {
+},{}],6:[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10116,7 +10116,7 @@ router.afterEach(function () {
 });
 
 exports.default = router;
-},{"vue-router":14,"./components/parcel":18,"./components/Home":13}],4:[function(require,module,exports) {
+},{"./components/parcel":9,"./components/Home":10,"vue-router":13}],2:[function(require,module,exports) {
 "use strict";
 
 var _app = require("./app.vue");
@@ -10131,16 +10131,14 @@ require("./index.less");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-window.onload = function () {
-  new Vue({
-    router: _router2.default,
-    el: 'app',
-    components: {
-      app: _app2.default
-    }
-  });
-};
-},{"./app.vue":6,"./index.less":7,"./router":8}],0:[function(require,module,exports) {
+new Vue({
+  router: _router2.default,
+  el: 'app',
+  components: {
+    app: _app2.default
+  }
+});
+},{"./app.vue":4,"./index.less":5,"./router":6}],0:[function(require,module,exports) {
 var global = (1, eval)('this');
 var OldModule = module.bundle.Module;
 function Module() {
@@ -10158,7 +10156,7 @@ function Module() {
 module.bundle.Module = Module;
 
 if (!module.bundle.parent) {
-  var ws = new WebSocket('ws://localhost:51146/');
+  var ws = new WebSocket('ws://localhost:57250/');
   ws.onmessage = function(event) {
     var data = JSON.parse(event.data);
 
@@ -10256,4 +10254,4 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.require, id)
   });
 }
-},{}]},{},[0,4])
+},{}]},{},[0,2])
