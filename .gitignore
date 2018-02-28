@@ -5,10 +5,10 @@ tmp
 runtime/*
 run/*
 node_modules/
+dist/
 bower_components/
 run.log
 .upload/
 .cache/
 npm-debug.log
 package-lock.json
-./dist/
