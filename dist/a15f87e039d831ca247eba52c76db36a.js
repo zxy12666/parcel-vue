@@ -68,7 +68,7 @@ require = (function (modules, cache, entry) {
 
   // Override the current require with this new one
   return newRequire;
-})({10:[function(require,module,exports) {
+})({15:[function(require,module,exports) {
 var global = (1,eval)("this");
 'use strict';
 
@@ -7266,7 +7266,7 @@ Vue$3.nextTick(function () {
 /*  */
 
 exports.default = Vue$3;
-},{}],11:[function(require,module,exports) {
+},{}],21:[function(require,module,exports) {
 var Vue // late bind
 var version
 var map = (window.__VUE_HOT_MAP__ = Object.create(null))
@@ -7508,7 +7508,7 @@ exports.reload = tryWrap(function (id, options) {
   })
 })
 
-},{}],3:[function(require,module,exports) {
+},{}],9:[function(require,module,exports) {
 ;(function () {
   'use strict';
 
@@ -7541,7 +7541,7 @@ if (module.hot) {
     }
   })();
 }
-},{"vue-hot-reload-api":11,"vue":10}],12:[function(require,module,exports) {
+},{"vue-hot-reload-api":21,"vue":15}],19:[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -9994,7 +9994,7 @@ if (inBrowser && window.Vue) {
 }
 
 exports.default = VueRouter;
-},{}],8:[function(require,module,exports) {
+},{}],11:[function(require,module,exports) {
 var __vue__options__ = typeof module.exports === "function" ? module.exports.options : module.exports;
 if (__vue__options__.functional) {
   console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.");
@@ -10016,7 +10016,7 @@ if (module.hot) {
     }
   })();
 }
-},{"vue-hot-reload-api":11,"vue":10}],9:[function(require,module,exports) {
+},{"vue-hot-reload-api":21,"vue":15}],12:[function(require,module,exports) {
 var __vue__options__ = typeof module.exports === "function" ? module.exports.options : module.exports;
 if (__vue__options__.functional) {
   console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.");
@@ -10038,7 +10038,7 @@ if (module.hot) {
     }
   })();
 }
-},{"vue-hot-reload-api":11,"vue":10}],5:[function(require,module,exports) {
+},{"vue-hot-reload-api":21,"vue":15}],5:[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -10086,7 +10086,7 @@ router.afterEach(function () {
 });
 
 exports.default = router;
-},{"vue":10,"vue-router":12,"./components/parcel":8,"./components/Home":9}],7:[function(require,module,exports) {
+},{"vue":15,"vue-router":19,"./components/parcel":11,"./components/Home":12}],16:[function(require,module,exports) {
 var bundleURL = null;
 function getBundleURLCached() {
   if (!bundleURL) {
@@ -10116,7 +10116,7 @@ function getBaseURL(url) {
 
 exports.getBundleURL = getBundleURLCached;
 exports.getBaseURL = getBaseURL;
-},{}],6:[function(require,module,exports) {
+},{}],7:[function(require,module,exports) {
 var bundle = require('./bundle-url');
 
 function updateLink(link) {
@@ -10147,13 +10147,13 @@ function reloadCSS() {
 }
 
 module.exports = reloadCSS;
-},{"./bundle-url":7}],4:[function(require,module,exports) {
+},{"./bundle-url":16}],4:[function(require,module,exports) {
 
         var reloadCSS = require('_css_loader');
         module.hot.dispose(reloadCSS);
         module.hot.accept(reloadCSS);
       
-},{"_css_loader":6}],2:[function(require,module,exports) {
+},{"_css_loader":7}],2:[function(require,module,exports) {
 'use strict';
 
 var _vue = require('vue');
@@ -10179,7 +10179,7 @@ new _vue2.default({
     return h(_app2.default);
   }
 });
-},{"vue":10,"./app":3,"./router":5,"./index.less":4}],0:[function(require,module,exports) {
+},{"vue":15,"./app":9,"./router":5,"./index.less":4}],0:[function(require,module,exports) {
 var global = (1, eval)('this');
 var OldModule = module.bundle.Module;
 function Module(config) {
@@ -10198,7 +10198,7 @@ function Module(config) {
 module.bundle.Module = Module;
 
 if (!module.bundle.parent && typeof WebSocket !== 'undefined') {
-  var ws = new WebSocket('ws://localhost:51495/');
+  var ws = new WebSocket('ws://localhost:61305/');
   ws.onmessage = function(event) {
     var data = JSON.parse(event.data);
 
